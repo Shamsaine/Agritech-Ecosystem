@@ -1,0 +1,1 @@
+### This  is a project for an agritech dashboard. A consolidated database of agricultural technology applications.
