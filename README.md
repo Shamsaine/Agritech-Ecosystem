@@ -5,4 +5,6 @@
 3. Database postgreSQL
 4. caching REDIS
 
+workflow will be broken into branches
+
 # Development will commence shortly.
