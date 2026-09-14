@@ -1,6 +1,7 @@
 import argparse
 import asyncio
 import json
+import sys
 
 from app.db.session import AsyncSessionFactory
 from app.imports.preflight import run_preflight
@@ -37,7 +38,8 @@ def main() -> int:
     parser.add_argument("workbook")
     parser.add_argument("--commit", action="store_true", help="Write validated records to PostgreSQL")
     args = parser.parse_args()
-    return asyncio.run(run_import(args.workbook, args.commit))
+    loop_factory = asyncio.SelectorEventLoop if sys.platform == "win32" else None
+    return asyncio.run(run_import(args.workbook, args.commit), loop_factory=loop_factory)
 
 
 if __name__ == "__main__":

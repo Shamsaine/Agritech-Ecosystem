@@ -180,7 +180,7 @@ class DataQualityIssue(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     import_row_id: Mapped[UUID | None] = mapped_column(
         ForeignKey("import_rows.id", ondelete="CASCADE"), nullable=True, index=True
     )
-    field_name: Mapped[str] = mapped_column(String(100), nullable=False)
+    field_name: Mapped[str | None] = mapped_column(String(100), nullable=True)
     issue_type: Mapped[str] = mapped_column(String(100), nullable=False)
     severity: Mapped[str] = mapped_column(String(50), nullable=False)
     status: Mapped[str] = mapped_column(String(50), nullable=False, default="open", server_default="open")

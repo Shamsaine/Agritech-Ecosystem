@@ -43,6 +43,8 @@ env/
 
 # Environment variables
 .env
+backend/.env
+backend/.venv/
 .env.local
 .env.*.local
 
@@ -50,6 +52,7 @@ env/
 *.db
 *.sqlite
 *.sqlite3
+*.dump
 
 # Testing
 .pytest_cache/

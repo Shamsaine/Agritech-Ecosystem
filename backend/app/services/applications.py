@@ -1,6 +1,6 @@
-from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.exceptions import ResourceNotFoundError
 from app.repositories.applications import get_application, list_applications
 from app.schemas.application import ApplicationDetail, ApplicationListItem, PaginatedApplications
 from app.schemas.common import PaginationMeta
@@ -43,9 +43,9 @@ async def get_application_detail(session: AsyncSession, identifier: str) -> Appl
     application = await get_application(session, identifier)
 
     if application is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Application not found",
+        raise ResourceNotFoundError(
+            "Application not found",
+            details={"identifier": identifier},
         )
 
     return ApplicationDetail.model_validate(application)

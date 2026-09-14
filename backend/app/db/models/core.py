@@ -60,9 +60,10 @@ class Location(UUIDPrimaryKeyMixin, TimestampMixin, Base):
         comment="country, state, region, city, etc.",
     )
 
-    country_code: Mapped[str] = mapped_column(
+    country_code: Mapped[str | None] = mapped_column(
         String(2),
-        nullable=False,
+        nullable=True,
+        index=True,
         comment="ISO 3166-1 alpha-2 code",
     )
 
