@@ -1,3 +1,28 @@
+from app.db.models.associations import (
+    application_association_table,
+    application_categories,
+    application_developers,
+    application_focus_areas,
+    application_languages,
+    application_locations,
+    application_physical_components,
+    application_platforms,
+    application_technologies,
+)
+from app.db.models.core import (
+    Application,
+    Developer,
+    Location,
+    Organisation,
+)
+from app.db.models.governance import (
+    ApplicationEvidence,
+    DataQualityIssue,
+    EvidenceSource,
+    ImportBatch,
+    ImportRow,
+    VerificationReview,
+)
 from app.db.models.reference import (
     AccessType,
     AvailabilityStatus,
@@ -11,11 +36,30 @@ from app.db.models.reference import (
 
 __all__ = [
     "AccessType",
+    "Application",
+    "ApplicationEvidence",
+    "application_association_table",
+    "application_categories",
+    "application_developers",
+    "application_focus_areas",
+    "application_languages",
+    "application_locations",
+    "application_physical_components",
+    "application_platforms",
+    "application_technologies",
     "AvailabilityStatus",
     "Category",
+    "DataQualityIssue",
+    "Developer",
+    "EvidenceSource",
     "FocusArea",
     "Language",
+    "Location",
+    "Organisation",
     "PhysicalComponent",
     "Platform",
     "Technology",
+    "ImportBatch",
+    "ImportRow",
+    "VerificationReview",
 ]

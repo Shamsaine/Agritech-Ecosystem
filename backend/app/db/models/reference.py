@@ -1,11 +1,24 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import Boolean, String, Text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
+from app.db.models.associations import (
+    application_categories,
+    application_focus_areas,
+    application_languages,
+    application_physical_components,
+    application_platforms,
+    application_technologies,
+)
 from app.db.models.mixins import (
     TimestampMixin,
     UUIDPrimaryKeyMixin,
 )
+
+if TYPE_CHECKING:
+    from app.db.models.core import Application
 
 
 class ReferenceTableMixin:
@@ -44,6 +57,13 @@ class Technology(
 ):
     __tablename__ = "technologies"
 
+    applications: Mapped[list["Application"]] = relationship(
+        "Application",
+        secondary=application_technologies,
+        back_populates="technologies",
+        passive_deletes=True,
+    )
+
 
 class Category(
     UUIDPrimaryKeyMixin,
@@ -52,6 +72,13 @@ class Category(
     Base,
 ):
     __tablename__ = "categories"
+
+    applications: Mapped[list["Application"]] = relationship(
+        "Application",
+        secondary=application_categories,
+        back_populates="categories",
+        passive_deletes=True,
+    )
 
 
 class FocusArea(
@@ -62,6 +89,13 @@ class FocusArea(
 ):
     __tablename__ = "focus_areas"
 
+    applications: Mapped[list["Application"]] = relationship(
+        "Application",
+        secondary=application_focus_areas,
+        back_populates="focus_areas",
+        passive_deletes=True,
+    )
+
 
 class Platform(
     UUIDPrimaryKeyMixin,
@@ -71,6 +105,13 @@ class Platform(
 ):
     __tablename__ = "platforms"
 
+    applications: Mapped[list["Application"]] = relationship(
+        "Application",
+        secondary=application_platforms,
+        back_populates="platforms",
+        passive_deletes=True,
+    )
+
 
 class Language(
     UUIDPrimaryKeyMixin,
@@ -79,6 +120,13 @@ class Language(
     Base,
 ):
     __tablename__ = "languages"
+
+    applications: Mapped[list["Application"]] = relationship(
+        "Application",
+        secondary=application_languages,
+        back_populates="languages",
+        passive_deletes=True,
+    )
 
 
 class AccessType(
@@ -106,3 +154,10 @@ class PhysicalComponent(
     Base,
 ):
     __tablename__ = "physical_components"
+
+    applications: Mapped[list["Application"]] = relationship(
+        "Application",
+        secondary=application_physical_components,
+        back_populates="physical_components",
+        passive_deletes=True,
+    )
