@@ -328,6 +328,21 @@ class Application(UUIDPrimaryKeyMixin, TimestampMixin, Base):
         nullable=True,
     )
 
+    source_record_id: Mapped[str | None] = mapped_column(
+        String(50),
+        nullable=True,
+        unique=True,
+        index=True,
+    )
+
+    record_status: Mapped[str] = mapped_column(
+        String(30),
+        nullable=False,
+        default="draft",
+        server_default="draft",
+        index=True,
+    )
+
     owning_organisation_id: Mapped[UUID | None] = mapped_column(
         ForeignKey("organisations.id", ondelete="SET NULL"),
         nullable=True,
@@ -348,6 +363,7 @@ class Application(UUIDPrimaryKeyMixin, TimestampMixin, Base):
         nullable=False,
         default="unverified",
         server_default="unverified",
+        index=True,
         comment="unverified, verified, rejected, etc.",
     )
 
@@ -355,6 +371,7 @@ class Application(UUIDPrimaryKeyMixin, TimestampMixin, Base):
         nullable=False,
         default=True,
         server_default="true",
+        index=True,
     )
 
     # Relationships

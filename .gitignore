@@ -58,3 +58,7 @@ htmlcov/
 
 # Alembic
 versions/__pycache__/
+
+# Local pilot data and generated reports
+/agritech_pilot_relational_database_50.xlsx
+/backend/reports/*.json

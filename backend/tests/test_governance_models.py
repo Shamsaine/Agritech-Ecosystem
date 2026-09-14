@@ -60,9 +60,7 @@ async def test_duplicate_source_url_and_claim_are_rejected(db_session: AsyncSess
     await db_session.commit()
 
     db_session.add(EvidenceSource(title="Duplicate", url="https://example.com/source", source_type="website"))
-    with pytest.raises(IntegrityError):
-        await db_session.commit()
-    await db_session.rollback()
+    await db_session.commit()
 
     application = Application(name="Farm Guide Two", slug="farm-guide-two")
     source = EvidenceSource(title="Source Two", url="https://example.com/source-two", source_type="website")

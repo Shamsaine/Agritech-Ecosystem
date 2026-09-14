@@ -1,6 +1,6 @@
 """Many-to-many association tables for applications."""
 
-from sqlalchemy import Column, DateTime, ForeignKey, Table, func
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, String, Table, func, text
 from sqlalchemy.dialects.postgresql import UUID
 
 from app.db.base import Base
@@ -28,6 +28,27 @@ def application_association_table(
             ForeignKey(f"{related_table}.id", ondelete="CASCADE"),
             nullable=False,
             primary_key=True,
+        ),
+        Column(
+            "role",
+            String(50),
+            nullable=True,
+        ),
+        Column(
+            "relationship_type",
+            String(80),
+            nullable=True,
+        ),
+        Column(
+            "is_primary",
+            Boolean,
+            nullable=False,
+            server_default=text("false"),
+        ),
+        Column(
+            "confidence",
+            String(50),
+            nullable=True,
         ),
         Column(
             "created_at",

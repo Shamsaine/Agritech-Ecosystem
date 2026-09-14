@@ -20,8 +20,8 @@ class EvidenceSource(UUIDPrimaryKeyMixin, TimestampMixin, Base):
 
     __tablename__ = "evidence_sources"
 
-    title: Mapped[str] = mapped_column(String(255), nullable=False)
-    url: Mapped[str] = mapped_column(String(2048), nullable=False, unique=True, index=True)
+    title: Mapped[str] = mapped_column(String(300), nullable=False)
+    url: Mapped[str | None] = mapped_column(String(2048), nullable=True, index=True)
     publisher: Mapped[str | None] = mapped_column(String(255), nullable=True)
     source_type: Mapped[str] = mapped_column(String(50), nullable=False)
     published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
@@ -109,6 +109,7 @@ class ImportBatch(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     total_rows: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default="0")
     processed_rows: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default="0")
     successful_rows: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default="0")
+    quarantined_rows: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default="0")
     failed_rows: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default="0")
     started_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
@@ -127,10 +128,11 @@ class ImportBatch(UUIDPrimaryKeyMixin, TimestampMixin, Base):
         CheckConstraint("total_rows >= 0", name="ck_import_batches_total_rows_nonnegative"),
         CheckConstraint("processed_rows >= 0", name="ck_import_batches_processed_rows_nonnegative"),
         CheckConstraint("successful_rows >= 0", name="ck_import_batches_successful_rows_nonnegative"),
+        CheckConstraint("quarantined_rows >= 0", name="quarantined_rows_nonnegative"),
         CheckConstraint("failed_rows >= 0", name="ck_import_batches_failed_rows_nonnegative"),
         CheckConstraint("processed_rows <= total_rows", name="ck_import_batches_processed_le_total"),
         CheckConstraint(
-            "successful_rows + failed_rows <= processed_rows",
+            "successful_rows + failed_rows + quarantined_rows <= processed_rows",
             name="ck_import_batches_results_le_processed",
         ),
     )

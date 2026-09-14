@@ -143,3 +143,66 @@ async def client(test_session: AsyncSession) -> AsyncGenerator[AsyncClient, None
 async def db_session(test_session: AsyncSession) -> AsyncSession:
     """Provide test session for non-endpoint tests."""
     return test_session
+
+
+@pytest.fixture
+async def imported_pilot_data(db_session: AsyncSession):
+    """Seed a realistic public pilot dataset for browsing and detail tests."""
+    from app.db.models import Application, Category, Location, Organisation, Technology
+
+    location = Location(
+        name="Nigeria",
+        slug="nigeria",
+        location_type="country",
+        country_code="NG",
+        is_active=True,
+    )
+    organisation = Organisation(
+        name="TracTrac Mechanization Services Limited",
+        slug="tractrac-mechanization-services-limited",
+        organisation_type="organisation",
+        verification_status="unverified",
+        is_active=True,
+        headquarters_location=location,
+    )
+    technology = Technology(name="GIS Remote Sensing", slug="gis-remote-sensing", is_active=True)
+    category = Category(name="Crop Production Tools", slug="crop-production-tools", is_active=True)
+    db_session.add_all([location, organisation, technology, category])
+    await db_session.flush()
+
+    for index in range(1, 39):
+        app = Application(
+            name=f"Pilot App {index}",
+            slug=f"pilot-app-{index}",
+            summary=f"App {index} summary",
+            description=f"Description {index}",
+            website_url=f"https://example.com/{index}",
+            launch_year=2020 + (index % 5),
+            owning_organisation_id=organisation.id,
+            verification_status="unverified" if index % 3 else "verified",
+            record_status="pilot",
+            is_active=True,
+            source_record_id=f"AGR-{1000 + index}",
+        )
+        app.locations.append(location)
+        app.technologies.append(technology)
+        app.categories.append(category)
+        db_session.add(app)
+
+    quarantined = Application(
+        name="Quarantined App",
+        slug="quarantined-app",
+        summary="Hidden from public browsing",
+        description="This record is quarantined",
+        website_url="https://example.com/quarantined",
+        launch_year=2024,
+        owning_organisation_id=organisation.id,
+        verification_status="rejected",
+        record_status="quarantined",
+        is_active=True,
+        source_record_id="AGR-9999",
+    )
+    db_session.add(quarantined)
+
+    await db_session.commit()
+    return {"total_public": 38, "quarantined": quarantined.id}
